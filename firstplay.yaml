@@ -1,0 +1,33 @@
+---
+- hosts: web_servers
+  become: true
+  tasks: 
+
+  - name: create directory on client nodes
+    file:
+      path: /home/ubuntu/task
+      state: directory
+      mode: '0755'
+      
+  - name: copy 10-barbican_wsgi_main.conf to client nodes
+    copy: 
+      src: ~/Desktop/ansible-task/nokia/10-barbican_wsgi_main.conf
+      dest: /home/ubuntu/task/
+      mode: '0644'
+
+  - name: change processes value to two in 10-barbican_wsgi_main.conf
+    lineinfile: 
+      path: /home/ubuntu/task/10-barbican_wsgi_main.conf
+      search_string: 'WSGIDaemonProcess' 
+      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=2 threads=1 user=barbican'
+
+- hosts: localhost
+  tasks: 
+
+  - name: (LOCAL) change processes value to two in 10-barbican_wsgi_main.conf
+    lineinfile:
+      path: ~/Desktop/ansible-task/nokia/10-barbican_wsgi_main.conf
+      search_string: 'WSGIDaemonProcess'
+      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=2 threads=1 user=barbican'
+     
+
