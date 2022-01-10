@@ -1,0 +1,29 @@
+---
+- hosts: web_servers
+  become: true
+  tasks:
+
+
+  - name: copy files into clients 
+    copy:
+      src: "{{ item }}"
+      dest: /home/ubuntu/task/
+    with_items:
+      - ~/Desktop/ansible-task/nokia/post-install.yml
+      - ~/Desktop/ansible-task/nokia/user_config.yaml
+
+  - name: add a block to post-install.yml
+    blockinfile:
+      path: /home/ubuntu/task/post-install.yml
+      block: |
+        - import_playbook: disable-gnocchi-aodh-and-ceilometer.yml
+          tags: [update,scale-out]
+      insertbefore: "^# Configure Novl , - do not place any includes below here."
+
+  - name: add IPs to user_config.yaml
+    lineinfile:
+      path: /home/ubuntu/task/user_config.yaml
+      search_string: 'external_storage_iscsi_ip'
+      line: '    external_storage_iscsi_ip: 10.94.195.20, 10.94.195.30'
+
+
