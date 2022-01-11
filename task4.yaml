@@ -33,13 +33,10 @@
         - /home/ubuntu/directory_3/text_3.txt
         - /home/ubuntu/directory_3/text_4.txt
 
-    - name: delete files if they exist
-      file:
-        path: "{{ item }}"
+
+    - name: delete if exists
+      file: 
         state: absent
-      with_items:
-        - /home/ubuntu/directory_1/post-install.yml
-        - /home/ubuntu/directory_2/user_config.yaml
-        - /home/ubuntu/directory_3/text_3.txt
-        - /home/ubuntu/directory_3/text_4.txt
-      when: files.results[0].stat.exists 
+        path: "{{ item.stat.path }}"
+      with_items: "{{ files.results }}"
+      when: item.stat.exists == True
