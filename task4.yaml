@@ -1,0 +1,45 @@
+---
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: create three directories
+      file: 
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      with_items:
+        - /home/ubuntu/directory_1
+        - /home/ubuntu/directory_2
+        - /home/ubuntu/directory_3
+
+    - name: copy files to different directories
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: '~/Desktop/ansible-task/nokia/post-install.yml',dest: '/home/ubuntu/directory_1',mode: '755' }
+        - { src: '~/Desktop/ansible-task/nokia/user_config.yaml',dest: '/home/ubuntu/directory_2',mode: '777' }
+        - { src: '~/Desktop/ansible-task/nokia/text_3.txt',dest: '/home/ubuntu/directory_3',mode: '775' }
+
+    - name: check if files exist
+      stat:
+        path: "{{ item }}"
+      register: files
+      with_items:
+        - /home/ubuntu/directory_1/post-install.yml
+        - /home/ubuntu/directory_2/user_config.yaml
+        - /home/ubuntu/directory_3/text_3.txt
+        - /home/ubuntu/directory_3/text_4.txt
+
+    - name: delete files if they exist
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /home/ubuntu/directory_1/post-install.yml
+        - /home/ubuntu/directory_2/user_config.yaml
+        - /home/ubuntu/directory_3/text_3.txt
+        - /home/ubuntu/directory_3/text_4.txt
+      when: files.results[0].stat.exists 
