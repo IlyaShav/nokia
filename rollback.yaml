@@ -4,10 +4,10 @@
   tasks: 
 
   - name: change file content to original value in client nodes
-    lineinfile:
+    replace:
       path: /home/ubuntu/task/10-barbican_wsgi_main.conf
-      search_string: 'WSGIDaemonProcess'
-      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=80 threads=1 user=barbican'
+      regexp: 'processes=[0-9]{1,2}'
+      replace:  'processes=80'
 
   - name: delete files in client nodes
     file:
@@ -20,9 +20,9 @@
   tasks:
 
   - name: change file content to original value (LOCAL)
-    lineinfile:
+    replace:
       path: /home/ilya/Desktop/ansible-task/nokia/10-barbican_wsgi_main.conf
-      search_string: 'WSGIDaemonProcess'
-      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=80 threads=1 user=barbican'
+      regexp: 'processes=[0-9]{1,2}'
+      replace: 'processes=80'
    
 

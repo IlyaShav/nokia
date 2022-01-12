@@ -16,18 +16,18 @@
       mode: '0644'
 
   - name: change processes value to two in 10-barbican_wsgi_main.conf
-    lineinfile: 
+    replace: 
       path: /home/ubuntu/task/10-barbican_wsgi_main.conf
-      search_string: 'WSGIDaemonProcess' 
-      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=2 threads=1 user=barbican'
+      regexp: 'processes=[0-9]{1,2}' 
+      replace: 'processes=2'
 
 - hosts: localhost
   tasks: 
 
   - name: (LOCAL) change processes value to two in 10-barbican_wsgi_main.conf
-    lineinfile:
+    replace:
       path: ~/Desktop/ansible-task/nokia/10-barbican_wsgi_main.conf
-      search_string: 'WSGIDaemonProcess'
-      line: '  WSGIDaemonProcess barbican-api display-name=barbican_wsgi_main group=barbican processes=2 threads=1 user=barbican'
+      regexp: 'processes=[0-9]{1,2}'
+      replace: 'processes=2'
      
 
