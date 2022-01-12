@@ -26,5 +26,5 @@
 
   - name: delete user_config.yaml in clients
     file:
-      path: /home/ubuntu/task/post-install.yml
+      path: /home/ubuntu/task/user_config.yaml
       state: absent
