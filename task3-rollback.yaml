@@ -1,0 +1,30 @@
+---
+- hosts: web_servers
+  become: true
+  tasks:
+
+
+  - name: update post-install.yml in clients
+    blockinfile:
+      path: /home/ubuntu/task/post-install.yml
+      block: |
+        - import_playbook: disable-gnocchi-aodh-and-ceilometer.yml
+          tags: [update,scale-out]
+      insertbefore: "^# Configure Novl , - do not place any includes below here."
+      state: absent
+
+  - name: delete post-install.yml in clients
+    file:
+      path: /home/ubuntu/task/post-install.yml
+      state: absent
+
+  - name: update user_config.yaml
+    lineinfile:
+      path: /home/ubuntu/task/user_config.yaml
+      search_string: 'external_storage_iscsi_ip'
+      line: '    external_storage_iscsi_ip: null'
+
+  - name: delete user_config.yaml in clients
+    file:
+      path: /home/ubuntu/task/post-install.yml
+      state: absent
